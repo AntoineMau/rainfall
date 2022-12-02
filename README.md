@@ -19,7 +19,9 @@ You will be challenged during this project. You have to overcome these challenge
 Each level folders contains these files:
 
 - `flag` : Password for the next level
-- `Ressources/README.md` : How to find the password
+- `source` : file that translate binary to be understandable
+- `walkthrough` : file that include different steps of the test solution
+- `Ressources/` : Everything we need to prove our results
 
 ## Plus info
 
