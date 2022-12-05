@@ -1,5 +1,24 @@
 # Source
 
+Code reconstitué :
+
+```C
+int main (int ac, char **av)
+{
+    int cmp;
+
+    cmp = atoi(av[1]);
+    if (cmp == 423) {
+        system("/bin/sh");
+    } else {
+        printf("No !\n");
+    }
+    return 0;
+}
+```
+
+Origine depuis cutter :
+
 ```C
 undefined4 main(undefined4 placeholder_0, char **envp)
 {

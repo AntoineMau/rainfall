@@ -1,6 +1,6 @@
 # Level0
 
-On observe un executable a la racine `level0`
+On observe un exécutable à la racine `level0`
 
 ```bash
 $ ./level0
@@ -10,7 +10,7 @@ $ ./level0 8946153
 No !
 ```
 
-On cherche donc a comprendre ce que fait l'executable
+On cherche donc à comprendre ce que fait l'exécutable
 
 ```bash
 $ gdb level0 -q
@@ -51,24 +51,17 @@ $ scp -P 4242 -r level0@192.168.56.102:/home/user/level0/level0 .
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage level0
 ```
 
-_resultat sauvegarde dans [source.md](source.md)_
+_resultat sauvegardé dans [source.md](source.md)_
 
-on peut remarquer une comparaison `iVar1 == 0x1a7`, on converti en base 10 :
+On remarque une comparaison `iVar1 == 0x1a7` (<code><main+25></code> dans l'ASM), ce qui donne en base 10 :
 
 - <code>0x1a7<sub>16</sub> = 423<sub>10</sub></code>
 
-On essaye donc 423 en parametre de l'executable
+On essaye donc 423 en paramètre de l'exécutable
 
 ```bash
 level0:$ ./level0 423
-
 $ cat /home/user/level1/.pass
 1fe8a524fa4bec01ca4ea2a869af2a02260d4a7d5fe7e7c24d8617e6dca12d3a
-
 $ exit
-
-level0:$ su level1
-Password:
-
-level1:$
 ```
