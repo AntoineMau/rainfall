@@ -1,4 +1,4 @@
-# level0
+# Level0
 
 On observe un executable a la racine `level0`
 
@@ -51,7 +51,7 @@ $ scp -P 4242 -r level0@192.168.56.102:/home/user/level0/level0 .
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage level0
 ```
 
-saved in [source.md](source.md)
+_resultat sauvegarde dans [source.md](source.md)_
 
 on peut remarquer une comparaison `iVar1 == 0x1a7`, on converti en base 10 :
 

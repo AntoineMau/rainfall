@@ -1,8 +1,6 @@
 # Source
 
 ```C
-#include <stdint.h>
-
 undefined4 main(undefined4 placeholder_0, char **envp)
 {
     int32_t iVar1;
