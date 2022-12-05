@@ -57,9 +57,7 @@ Segmentation fault (core dumped)
 
 - `python -c 'print "A"*75'` est notre taille aloue maximum (75 + 1 = 76 pour le `\n` automatique du print de python)
 
-- `python -c 'print "A"*76'` et `python -c 'print "A"*77'`, on ecrit pardessus EBP sauvegarde
-
-- `python -c 'print "A"*78'`, on ecrit pardessus EIP
+- `76` a `79'`, on ecrit pardessus EBP sauvegarde
 
 On remarque aussi, grace a `Cutter` qu'il y a une fonction `run` bien pratique colle a main qui fait un appel a `/bin/sh`
 
@@ -119,5 +117,5 @@ Segmentation fault (core dumped)
 level1:$ su level2
 Password:
 
-level3:$
+level2:$
 ```
