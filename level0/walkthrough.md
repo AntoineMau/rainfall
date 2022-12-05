@@ -51,7 +51,7 @@ $ scp -P 4242 -r level0@192.168.56.102:/home/user/level0/level0 .
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage level0
 ```
 
-saved in [source.md](https://github.com/AntoineMau/rainfall/tree/main/level0/source.md)
+saved in [source.md](source.md)
 
 on peut remarquer une comparaison `iVar1 == 0x1a7`, on converti en base 10 :
 
