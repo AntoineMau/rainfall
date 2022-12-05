@@ -14,31 +14,33 @@ On cherche donc a comprendre ce que fait l'executable
 
 ```bash
 $ gdb level0 -q
-Reading symbols from /home/user/level0/level0...(no debugging symbols found)...done.
+Reading symbols from level0...
+(No debugging symbols found in level0)
+(gdb) set disassembly-flavor intel
 (gdb) disas main
 Dump of assembler code for function main:
-   0x08048ec0 <+0>:    push   %ebp
-   0x08048ec1 <+1>:    mov    %esp,%ebp
-   0x08048ec3 <+3>:    and    $0xfffffff0,%esp
-   0x08048ec6 <+6>:    sub    $0x20,%esp
-   0x08048ec9 <+9>:    mov    0xc(%ebp),%eax
-   0x08048ecc <+12>:   add    $0x4,%eax
-   0x08048ecf <+15>:   mov    (%eax),%eax
-   0x08048ed1 <+17>:   mov    %eax,(%esp)
-   0x08048ed4 <+20>:   call   0x8049710 <atoi>
-   0x08048ed9 <+25>:   cmp    $0x1a7,%eax
-   0x08048ede <+30>:   jne    0x8048f58 <main+152>
-   0x08048ee0 <+32>:   movl   $0x80c5348,(%esp)
-   0x08048ee7 <+39>:   call   0x8050bf0 <strdup>
-   0x08048eec <+44>:   mov    %eax,0x10(%esp)
-   0x08048ef0 <+48>:   movl   $0x0,0x14(%esp)
-   0x08048ef8 <+56>:   call   0x8054680 <getegid>
-   0x08048efd <+61>:   mov    %eax,0x1c(%esp)
-   0x08048f01 <+65>:   call   0x8054670 <geteuid>
-   0x08048f06 <+70>:   mov    %eax,0x18(%esp)
-   0x08048f0a <+74>:   mov    0x1c(%esp),%eax
-   0x08048f0e <+78>:   mov    %eax,0x8(%esp)
-   0x08048f12 <+82>:   mov    0x1c(%esp),%eax
+   0x08048ec0 <+0>:   push   ebp
+   0x08048ec1 <+1>:   mov    ebp,esp
+   0x08048ec3 <+3>:   and    esp,0xfffffff0
+   0x08048ec6 <+6>:   sub    esp,0x20
+   0x08048ec9 <+9>:   mov    eax,DWORD PTR [ebp+0xc]
+   0x08048ecc <+12>:  add    eax,0x4
+   0x08048ecf <+15>:  mov    eax,DWORD PTR [eax]
+   0x08048ed1 <+17>:  mov    DWORD PTR [esp],eax
+   0x08048ed4 <+20>:  call   0x8049710 <atoi>
+   0x08048ed9 <+25>:  cmp    eax,0x1a7
+   0x08048ede <+30>:  jne    0x8048f58 <main+152>
+   0x08048ee0 <+32>:  mov    DWORD PTR [esp],0x80c5348
+   0x08048ee7 <+39>:  call   0x8050bf0 <strdup>
+   0x08048eec <+44>:  mov    DWORD PTR [esp+0x10],eax
+   0x08048ef0 <+48>:  mov    DWORD PTR [esp+0x14],0x0
+   0x08048ef8 <+56>:  call   0x8054680 <getegid>
+   0x08048efd <+61>:  mov    DWORD PTR [esp+0x1c],eax
+   0x08048f01 <+65>:  call   0x8054670 <geteuid>
+   0x08048f06 <+70>:  mov    DWORD PTR [esp+0x18],eax
+   0x08048f0a <+74>:  mov    eax,DWORD PTR [esp+0x1c]
+   0x08048f0e <+78>:  mov    DWORD PTR [esp+0x8],eax
+   0x08048f12 <+82>:  mov    eax,DWORD PTR [esp+0x1c]
 ```
 
 On va utiliser `Cutter` pour avoir un idee plus clair de `level0`
@@ -49,47 +51,9 @@ $ scp -P 4242 -r level0@192.168.56.102:/home/user/level0/level0 .
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage level0
 ```
 
-```c
-#include <stdint.h>
+saved in [source.md](https://github.com/AntoineMau/rainfall/tree/main/level0/source.md)
 
-int32_t main (char ** envp) {
-    int32_t var_4h;
-    int32_t var_8h;
-    int32_t var_ch;
-    int32_t var_10h;
-    int32_t var_14h;
-    uid_t var_18h;
-    int32_t var_1ch;
-    eax = envp;
-    eax += 4;
-    eax = *(eax);
-    eax = atoi (eax);
-    if (eax == 0x1a7) {
-        eax = _strdup ("/bin/sh");
-        eax = getegid (eax, 0);
-        eax = geteuid (eax);
-        eax = var_1ch;
-        eax = var_1ch;
-        eax = var_1ch;
-        _setresgid (eax, eax, var_1ch, var_1ch);
-        eax = var_18h;
-        eax = var_18h;
-        eax = var_18h;
-        setresuid (eax, var_18h, var_18h);
-        eax = &var_10h;
-        execv ("/bin/sh", eax);
-    } else {
-        eax = *(stderr);
-        edx = *(stderr);
-        eax = "No !\n";
-        _IO_fwrite (eax, edx, 5, 1);
-    }
-    eax = 0;
-    return eax;
-}
-```
-
-on peut remarquer une comparaison `eax == 0x1a7`, on converti en base 10 :
+on peut remarquer une comparaison `iVar1 == 0x1a7`, on converti en base 10 :
 
 - <code>0x1a7<sub>16</sub> = 423<sub>10</sub></code>
 
