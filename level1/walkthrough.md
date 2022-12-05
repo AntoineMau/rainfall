@@ -55,7 +55,7 @@ $ python -c 'print "A"*78' | ./level1
 Segmentation fault (core dumped)
 ```
 
-- `python -c 'print "A"*75'` est notre taille aloue maximum
+- `python -c 'print "A"*75'` est notre taille aloue maximum (75 + 1 = 76 pour le `\n` automatique du print de python)
 
 - `python -c 'print "A"*76'` et `python -c 'print "A"*77'`, on ecrit pardessus EBP sauvegarde
 
