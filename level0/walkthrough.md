@@ -1,6 +1,6 @@
 # Level0
 
-On observe un exécutable à la racine `level0`
+On observe un exécutable à la racine : `level0`
 
 ```shell
 $ ./level0
@@ -53,7 +53,7 @@ $ ./Cutter-v2.1.2-Linux-x86_64.AppImage level0
 
 _resultat sauvegardé dans [source.md](source.md)_
 
-On remarque une comparaison `iVar1 == 0x1a7` (<code><main+25></code> dans l'ASM), ce qui donne en base 10 :
+On remarque une comparaison `iVar1 == 0x1a7` (`<main+25>` dans l'ASM), ce qui donne en base 10 :
 
 - <code>0x1a7<sub>16</sub> = 423<sub>10</sub></code>
 
