@@ -60,7 +60,7 @@ Dump of assembler code for function p:
 End of assembler dump.
 ```
 
-On va utiliser `Cutter` pour avoir une idée plus claire de `level2`
+On va utiliser `Cutter` pour avoir une idée plus claire de `level4`
 
 ```shell
 $ scp -P 4242 -r level4@192.168.56.102:/home/user/level4/level4 .

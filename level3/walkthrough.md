@@ -55,7 +55,7 @@ Dump of assembler code for function v:
 End of assembler dump.
 ```
 
-On va utiliser `Cutter` pour avoir une idée plus claire de `level2`
+On va utiliser `Cutter` pour avoir une idée plus claire de `level3`
 
 ```shell
 $ scp -P 4242 -r level3@192.168.56.102:/home/user/level3/level3 .
