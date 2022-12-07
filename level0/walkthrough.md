@@ -51,11 +51,11 @@ $ scp -P 4242 -r level0@192.168.56.102:/home/user/level0/level0 .
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage level0
 ```
 
-_resultat sauvegardé dans [source.md](source.md)_
+_résultat sauvegardé dans [source.md](source.md)_
 
 On remarque une comparaison `iVar1 == 0x1a7` (`<main+25>` dans l'ASM), ce qui donne en base 10 :
 
-- <code>0x1a7<sub>16</sub> = 423<sub>10</sub></code>
+- <code>1a7<sub>16</sub> = 423<sub>10</sub></code>
 
 On essaye donc 423 en paramètre de l'exécutable
 

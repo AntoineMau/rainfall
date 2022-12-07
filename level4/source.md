@@ -1,43 +1,39 @@
 # Source
 
-## jsdec
+Code reconstitué :
 
 ```C
-#include <stdint.h>
-
-int32_t main (void) {
-    n ();
+void p(char *str)
+{
+    printf(str);
+    return;
 }
 
-int32_t n (void) {
-    char * s;
-    int32_t size;
-    FILE * stream;
-    eax = *(stdin);
-    eax = &s;
-    fgets (eax, *(stdin), 0x200);
-    eax = &s;
-    p (eax);
-    eax = m;
-    if (eax == 0x1025544) {
-        system ("/bin/cat /home/user/level5/.pass");
+void n(void)
+{
+    char *str;
+
+    fgets(&str, 512, _stdin);
+    p(&str);
+    if (_m == 0x1025544) {
+        system("/bin/cat /home/user/level5/.pass");
     }
-    return eax;
+    return;
 }
 
-int32_t p (const char * format) {
-    eax = format;
-    printf (eax);
-    return eax;
-}
-```
-
-## Ghidra
-
-```C
 void main(void)
 {
     n();
+    return;
+}
+```
+
+Origine depuis cutter :
+
+```C
+void p(char *format)
+{
+    printf(format);
     return;
 }
 
@@ -45,7 +41,7 @@ void n(void)
 {
     char *s;
 
-    fgets(&s, 0x200, _stdin);
+    fgets(&s, 0x200, stdin);
     p((char *)&s);
     if (_m == 0x1025544) {
         system("/bin/cat /home/user/level5/.pass");
@@ -53,9 +49,9 @@ void n(void)
     return;
 }
 
-void p(char *format)
+void main(void)
 {
-    printf(format);
+    n();
     return;
 }
 ```

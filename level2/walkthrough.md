@@ -70,7 +70,7 @@ $ scp -P 4242 -r level2@192.168.56.102:/home/user/level2/level2 .
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage level2
 ```
 
-_resultat sauvegardé dans [source.md](source.md)_
+_résultat sauvegardé dans [source.md](source.md)_
 
 Nous avons `76(src) + 4(EBP) = 80` de disponible
 

