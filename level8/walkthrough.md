@@ -1,8 +1,8 @@
 # Level8
 
-On observe un executable a la racine `level8`
+On observe un exécutable à la racine : `level8`
 
-```bash
+```shell
 $ ./level8
 (nil), (nil)
 Hello World
@@ -10,9 +10,9 @@ Hello World
 Ctrl+D
 ```
 
-On cherche donc a comprendre ce que fait l'executable
+On cherche donc à comprendre ce que fait l'exécutable
 
-```bash
+```shell
 $ gdb level8 -q
 Reading symbols from /home/user/level8/level8...(no debugging symbols found)...done.
 (gdb) set disassembly-flavor intel
@@ -159,17 +159,17 @@ Dump of assembler code for function main:
 End of assembler dump.
 ```
 
-On va utiliser `Cutter` pour avoir un idee plus clair de `level8`
+On va utiliser `Cutter` pour avoir une idée plus claire de `level8`
 
-```bash
+```shell
 $ scp -P 4242 -r level8@192.168.56.102:/home/user/level8/level8 .
 
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage level8
 ```
 
-_resultat sauvegarde dans [source.md](source.md)_
+_résultat sauvegardé dans [source.md](source.md)_
 
-Notre objectif est de changer la valeur de `_auth[8]` pour qu'elle ne soit pas egal a `0`
+Notre objectif est de changer la valeur de `_auth[8]` pour qu'elle ne soit pas égale à `0`
 
 ```C
 if (_auth[8] == 0) {
@@ -186,13 +186,13 @@ Nous avons 4 commandes a notre disposition
 - `"login"`: lance le fameux `if else` a valider
 - `"reset"`: free `"auth "` sans mettre ca valeur a zero
 
-`login` a besoin que `"auth "` ai ete lancer au moins une fois sinon, il y a un `SegFault`
+`login` a besoin que `"auth "` ai été lancer au moins une fois sinon, il y a un `SegFault`
 
 Le programme nous affiche deux valeur, la premiere est `_auth` et la seconde est `_service`
 
-En cherche dans l'`ASM`, grace a `gdb` le `_auth[8] == 0` pour savoir comment trouver/modifier cette valeur
+En cherchant dans l'`ASM`, grace a `gdb` le `_auth[8] == 0` pour savoir comment trouver/modifier cette valeur
 
-On trouve
+On trouve :
 
 ```shell
 0x080486e2      mov     eax, dword [auth] ; 0x8049aac
@@ -211,7 +211,7 @@ pour que `_auth + 0x20` soit different de 0
 
 On peut essayer notre theorie
 
-```bash
+```shell
 level8:$ ./level8
 (nil), (nil)
 auth
