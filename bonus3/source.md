@@ -1,70 +1,35 @@
 # Source
 
-## jsdec
+## Code reconstitué
 
 ```C
-#include <stdint.h>
+int main(int argc, char **argv)
+{
+    int Var1;
+    char Var2[16];
+    char Var3[66];
+    FILE *file;
 
-int32_t main (char ** argv, char ** envp) {
-    int32_t var_8h;
-    const char * size;
-    size_t nmemb;
-    FILE * stream;
-    const char * ptr;
-    int32_t var_59h;
-    FILE * var_9ch;
-    edx = 0x80486f0;
-    eax = "/home/user/end/.pass";
-    eax = fopen (eax, edx);
-    var_9ch = eax;
-    ebx = &ptr;
-    eax = 0;
-    edx = 0x21;
-    edi = ebx;
-    ecx = edx;
-    memset (edi, eax, ecx);
-    if (var_9ch != 0) {
-        if (argv == 2) {
-            goto label_0;
-        }
-    }
-    eax = 0xffffffff;
-    goto label_1;
-label_0:
-    eax = &ptr;
-    edx = var_9ch;
-    fread (eax, var_9ch, 0x42, 1);
-    eax = envp;
-    eax += 4;
-    eax = *(eax);
-    atoi (eax, 0);
-    *((esp + eax + 0x18)) = 0;
-    eax = &ptr;
-    edx = eax + 0x42;
-    eax = var_9ch;
-    fread (edx, var_9ch, 0x41, 1);
-    eax = var_9ch;
-    fclose (eax);
-    eax = envp;
-    eax += 4;
-    eax = *(eax);
-    eax = &ptr;
-    eax = strcmp (eax, *(eax));
-    if (eax == 0) {
-        execl ("/bin/sh", 0, 0x8048707);
+    file = fopen("/home/user/end/.pass", 0x80486f0);
+    if ((file == 0) || (argc != 2)) {
+        Var1 = 1;
     } else {
-        eax = &ptr;
-        eax += 0x42;
-        puts (eax);
+        fread(Var2, 1, 66, file);
+        Var2[atoi(argv[1])] = "\0";
+        fread(Var3, 1, 65, file);
+        fclose(file);
+        if (strcmp(Var2, argv[1]) == 0) {
+            execl("/bin/sh", 0x8048707, 0);
+        } else {
+            puts(Var3);
+        }
+        Var1 = 0;
     }
-    eax = 0;
-label_1:
-    esp = &var_8h;
-    return eax;
+    return Var1;
 }
 ```
 
-## Ghidra
+## Origine depuis cutter
 
 ```C
 undefined4 main(char **argv, char **envp)

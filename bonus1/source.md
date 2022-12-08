@@ -1,41 +1,29 @@
 # Source
 
-## jsdec
+## Code reconstitué
 
 ```C
-#include <stdint.h>
+int main(int argc, char **argv)
+{
+    int Var1;
+    char Var2[40];
+    int Var3;
 
-int32_t main (char ** envp) {
-    const void * s2;
-    size_t n;
-    void * s1;
-    unsigned long var_3ch;
-    eax = envp;
-    eax += 4;
-    eax = *(eax);
-    eax = atoi (eax);
-    var_3ch = eax;
-    if (var_3ch > 9) {
-        eax = 1;
-    } else {
-        eax = var_3ch;
-        ecx = eax*4;
-        eax = envp;
-        eax += 8;
-        eax = *(eax);
-        edx = *(eax);
-        eax = &s1;
-        memcpy (eax, ecx, edx);
-        if (var_3ch == 0x574f4c46) {
-            execl ("/bin/sh", 0, 0x8048580);
+    Var3 = atoi(argv[1]);
+    if (Var3 < 10) {
+        memcpy(Var2, argv[2], Var3 * 4);
+        if (Var3 == 0x574f4c46) {
+            execl("/bin/sh", 0x8048580, 0);
         }
-        eax = 0;
+        Var1 = 0;
+    } else {
+        Var1 = 1;
     }
-    return eax;
+    return Var1;
 }
 ```
 
-## Ghidra
+## Origine depuis cutter
 
 ```C
 undefined4 main(undefined4 placeholder_0, char **envp)
