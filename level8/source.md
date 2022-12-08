@@ -1,6 +1,6 @@
 # Source
 
-## jsdec
+## Code reconstitué :
 
 ```C
 int main(void)
@@ -40,7 +40,7 @@ int main(void)
 }
 ```
 
-## Ghidra
+## Origine depuis cutter :
 
 ```C
 undefined4 main(void)

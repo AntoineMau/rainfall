@@ -1,6 +1,6 @@
 # Source
 
-Code reconstitué :
+## Code reconstitué :
 
 ```C
 void m(void)
@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 }
 ```
 
-Origine depuis cutter :
+## Origine depuis cutter :
 
 ```C
 void m(void)

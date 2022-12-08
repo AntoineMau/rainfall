@@ -1,6 +1,6 @@
 # Source
 
-Code reconstitué :
+## Code reconstitué :
 
 ```C
 void p(char *str)
@@ -28,7 +28,7 @@ void main(void)
 }
 ```
 
-Origine depuis cutter :
+## Origine depuis cutter :
 
 ```C
 void p(char *format)

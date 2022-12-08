@@ -1,81 +1,58 @@
 # Source
 
-## jsdec
+## Code reconstitué :
 
 ```C
-#include <stdint.h>
+void p(char *dest, char *s)
+{
+    char *buf;
 
-int32_t main (void) {
-    const char * s;
-    eax = &s;
-    pp (eax);
-    eax = &s;
-    puts (eax);
-    eax = 0;
-    return eax;
+    puts(s);
+    read(0, &buf, 4096);
+    *strchr(&buf, '\n') = '\0';
+    strncpy(dest, &buf, 20);
+    return;
 }
 
-uint32_t pp (char * dest) {
-    int32_t var_3ch;
-    int32_t var_30h;
-    int32_t var_1ch;
-    const char * src;
-    eax = &var_30h;
-    p (ebx, edi, 0x80486a0);
-    eax = &var_1ch;
-    p (eax, 0x80486a0);
-    eax = &var_30h;
-    eax = dest;
-    strcpy (eax, eax);
-    ebx = 0x80486a4;
-    eax = dest;
-    var_3ch = 0xffffffff;
-    edx = eax;
-    eax = 0;
-    ecx = var_3ch;
-    edi = edx;
-    __asm ("repne scasb al, byte es:[edi]");
-    eax = ecx;
-    eax = ~eax;
-    eax--;
-    eax += dest;
-    edx = *(ebx);
-    *(eax) = dx;
-    eax = &var_1ch;
-    eax = dest;
-    strcat (eax, eax);
-    return eax;
+void pp(char *dest)
+{
+    char* buf1;
+    char* buf2;
+
+    uVar4 = 0;
+    p(&buf1, " - ");
+    p(&buf2, " - ");
+    strcpy(dest, &buf1);
+    buf[strlen(buf)] = ' ';
+    strcat(dest, &buf2);
+    return;
 }
 
-int32_t p (char * dest, const char * s) {
-    const char * var_1008h;
-    const char * src;
-    size_t nbyte;
-    eax = s;
-    puts (eax);
-    eax = &var_1008h;
-    read (0, 0x1000, eax);
-    eax = &var_1008h;
-    strchr (eax, 0xa);
-    *(eax) = 0;
-    eax = &var_1008h;
-    eax = dest;
-    strncpy (eax, 0x14, eax);
-    return eax;
+int main(void)
+{
+char buf[54];
+
+    pp(buf);
+    puts(buf);
+    return 0;
+
 }
 ```
 
-## Ghidra
+## Origine depuis cutter :
 
 ```C
-undefined4 main(void)
+void p(char *dest, char *s)
 {
-char acStack58 [54];
+    undefined *puVar1;
+    char *var_1008h;
 
-    pp(acStack58);
-    puts(acStack58);
-    return 0;
-
+    puts(s);
+    read(0, &var_1008h, 0x1000);
+    puVar1 = (undefined *)strchr(&var_1008h, 10);
+    *puVar1 = 0;
+    strncpy(dest, &var_1008h, 0x14);
+    return;
 }
 
 void pp(char *dest)
@@ -105,16 +82,13 @@ void pp(char *dest)
     return;
 }
 
-void p(char *dest, char *s)
+undefined4 main(void)
 {
-    undefined *puVar1;
-    char *var_1008h;
+char acStack58 [54];
 
-    puts(s);
-    read(0, &var_1008h, 0x1000);
-    puVar1 = (undefined *)strchr(&var_1008h, 10);
-    *puVar1 = 0;
-    strncpy(dest, &var_1008h, 0x14);
-    return;
+    pp(acStack58);
+    puts(acStack58);
+    return 0;
+
 }
 ```

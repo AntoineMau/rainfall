@@ -1,6 +1,6 @@
 # Source
 
-Code reconstitué :
+## Code reconstitué :
 
 ```C
 int main (int ac, char **av)
@@ -17,7 +17,7 @@ int main (int ac, char **av)
 }
 ```
 
-Origine depuis cutter :
+## Origine depuis cutter :
 
 ```C
 undefined4 main(undefined4 placeholder_0, char **envp)
