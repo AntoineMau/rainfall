@@ -1,128 +1,56 @@
 # Source
 
-## jsdec
+## Code reconstitué
 
 ```C
-#include <stdint.h>
+void greetuser(char *Var4)
+{
+    char *s1;
 
-int32_t main (char ** argv, char ** envp) {
-    int32_t var_ch;
-    const char * src;
-    size_t n;
-    char * dest;
-    char * s1;
-    if (argv != 3) {
-        eax = 1;
-        goto label_0;
+    if (_language == 1) {
+        &s1 = 0xc3767948;
+    } else if (_language == 2) {
+        &s1 = 0x64656f47;
+    } else if (_language == 0) {
+        &s1 = 0x6c6c6548;
     }
-    ebx = &dest;
-    eax = 0;
-    edx = 0x13;
-    edi = ebx;
-    ecx = edx;
-    memset (edi, eax, ecx);
-    eax = envp;
-    eax += 4;
-    eax = *(eax);
-    eax = &dest;
-    strncpy (eax, 0x28, eax);
-    eax = envp;
-    eax += 8;
-    eax = *(eax);
-    eax = &dest;
-    eax += 0x28;
-    strncpy (eax, 0x20, eax);
-    eax = getenv ("LANG");
-    s1 = eax;
-    if (s1 != 0) {
-        eax = s1;
-        eax = memcmp (eax, 2, 0x804873d);
-        if (eax == 0) {
-            *(language) = 1;
-        } else {
-            eax = s1;
-            eax = memcmp (eax, 2, 0x8048740);
-            if (eax != 0) {
-                goto label_1;
-            }
-            *(language) = 2;
-        }
-    }
-label_1:
-    edx = esp;
-    ebx = &dest;
-    eax = 0x13;
-    edi = edx;
-    esi = ebx;
-    ecx = eax;
-    do {
-        *(es:edi) = *(esi);
-        ecx--;
-        esi += 4;
-        es:edi += 4;
-    } while (ecx != 0);
-    greetuser ();
-label_0:
-    esp = &var_ch;
-    return eax;
+    strcat(&s1, &Var4);
+    puts(&s1);
+    return;
 }
 
-int32_t greetuser (int32_t arg_8h) {
-    char * s1;
-    const char * s2;
-    eax = language;
-    if (eax != 1) {
-        if (eax != 2) {
-            if (eax != 0) {
-                goto label_0;
+int main(int argc, char **argv)
+{
+    char *Var2;
+    char *Var4;
+    char *Dest1;
+    char *Dest2;
+
+    if (argc == 3) {
+        strncpy(Dest1, argv[1], 40);
+        strncpy(Dest2, argv[2], 32);
+        Var2 = getenv("LANG");
+        if (Var2 != 0) {
+            if (memcmp(Var2, 0x804873d, 2) == 0) {
+                _language = 1;
+                Var4 = Var2;
+            } else {
+                Var4 = Var2;
+                if (memcmp(Var4, 0x8048740, 2) == 0) {
+                    _language = 2;
+                } else {
+                    _language = 0;
+                }
             }
-            edx = "Hello ";
-            eax = &s1;
-            ecx = *(edx);
-            *(eax) = ecx;
-            ecx = *((edx + 4));
-            *((eax + 4)) = cx;
-            edx = *((edx + 6));
-            *((eax + 6)) = dl;
-            edx = "Hyv\u00e4\u00e4 p\u00e4iv\u00e4\u00e4 ";
-            eax = &s1;
-            ecx = *(edx);
-            *(eax) = ecx;
-            ecx = *((edx + 4));
-            *((eax + 4)) = ecx;
-            ecx = *((edx + 8));
-            *((eax + 8)) = ecx;
-            ecx = *((edx + 0xc));
-            *((eax + 0xc)) = ecx;
-            ecx = *((edx + 0x10));
-            *((eax + 0x10)) = cx;
-            edx = *((edx + 0x12));
-            *((eax + 0x12)) = dl;
-        } else {
-        } else {
-            edx = "Goedemiddag! ";
-            eax = &s1;
-            ecx = *(edx);
-            *(eax) = ecx;
-            ecx = *((edx + 4));
-            *((eax + 4)) = ecx;
-            ecx = *((edx + 8));
-            *((eax + 8)) = ecx;
-            edx = *((edx + 0xc));
-            *((eax + 0xc)) = dx;
         }
+        return greetuser(Var4);
+    } else {
+        return 1;
     }
-label_0:
-    eax = &arg_8h;
-    eax = &s1;
-    strcat (eax, eax);
-    eax = &s1;
-    puts (eax);
-    return eax;
 }
 ```
 
-## Ghidra
+## Origine depuis cutter
 
 ```C
 undefined4 main(char **argv, char **envp)
