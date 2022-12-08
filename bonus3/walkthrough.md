@@ -94,7 +94,7 @@ Dump of assembler code for function main:
 End of assembler dump.
 ```
 
-On va utiliser `Cutter` pour avoir un idee plus clair de `bonus3`
+On va utiliser `Cutter` pour avoir une idée plus claire de `bonus3`
 
 ```shell
 $ scp -P 4242 -r bonus3@192.168.56.102:/home/user/bonus3/bonus3 .
@@ -117,20 +117,20 @@ if ((iStack20 == 0) || (argv != (char **)0x2)) {
 }
 ```
 
-dans gdb, les executions sont effectuer avec nos droit. gdb ne va pas reussir a ouvrir le fichier donc il passe dans le if au dessus et termine le programme.
+GDB, exécute le programme avec nos droits. Il ne vas donc pas réussir a ouvrir le fichier qui ne nous appartiens pas donc il passe dans le if au dessus et termine le programme.
 
 Nous allons plutot expliquer se que fait le programme pour trouver une faille
 
 ```C
 ...
-fread(auStack152, 1, 0x42, iStack20);	// Il sauve 0x42 octets de iStack20 et les stocks dans auStack152
+fread(auStack152, 1, 0x42, iStack20);	// Lit le token du niveau suivant et le stocke
 uStack87 = 0;
-iVar2 = atoi(envp[1]);	// il fait un atoi de notre parametre et le stock dans iVar2
-*(undefined *)((int32_t)auStack152 + iVar2) = 0;	// Il met 0 a l'adresse de auStack152 + iVar2
+iVar2 = atoi(envp[1]);	// il fait un atoi de notre paramètre et le stocke
+*(undefined *)((int32_t)auStack152 + iVar2) = 0;	// Il met 0 a l'adresse [*auStack152 + iVar2]
 fread(auStack86, 1, 0x41, iStack20);
 fclose(iStack20);
-iVar2 = strcmp(auStack152, envp[1]);	// Il compare auStack152 et notre parametre
-if (iVar2 == 0) {	// Si auStack152 et notre parametre sont egaux
+iVar2 = strcmp(auStack152, envp[1]);	// Il compare auStack152 et notre paramètre
+if (iVar2 == 0) {	// Si auStack152 et notre paramètre sont egaux
 		execl("/bin/sh", 0x8048707, 0);
 } else {	// Sinon
 		puts(auStack86);
@@ -139,13 +139,11 @@ uVar1 = 0;
 ...
 ```
 
-Si Notre parametre est egal a `""`
+Si Notre paramètre est egal a `""`
 
 - `atoi("") = 0`
 - a l'adresse de `auStack152`, il va stocker 0
-- et comparer `0 (notre atoi) et 0 (la nouvelle valeur de auStack152)`
-
-On a plus qu'a essayer
+- et comparer `"" (notre paramètre) et "" (la nouvelle valeur de auStack152)`
 
 ```shell
 $ ./bonus3 ""

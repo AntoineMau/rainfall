@@ -56,7 +56,7 @@ Dump of assembler code for function main:
 End of assembler dump.
 ```
 
-On va utiliser `Cutter` pour avoir un idee plus clair de `bonus1`
+On va utiliser `Cutter` pour avoir une idée plus claire de `bonus1`
 
 ```shell
 $ scp -P 4242 -r bonus1@192.168.56.102:/home/user/bonus1/bonus1 .

@@ -32,7 +32,7 @@ void main(int argc, char **argv)
     N *class1 = new N(5)
     N *class2 = new N(6)
     class1->setAnnotation(argv[1])
-    class2->operator+(class1)
+    **class2->operator+(class1)
     return;
 }
 ```
