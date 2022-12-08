@@ -3,7 +3,41 @@
 ## jsdec
 
 ```C
+int main(void)
+{
+    uint8_t input [5];
+    char auth_array[2];
+    char service_arrray[125];
 
+    while(1)
+    {
+        printf("%p, %p \n", _auth, _service);
+
+        if (fgets(input, 128, stdin) == 0)
+            return 0;
+
+        if (input == "auth ")
+        {
+            _auth = malloc(4);
+            *_auth = 0
+            strcpy(_auth, auth_array);
+        }
+
+        if (input == "reset")
+            free(_auth);
+
+        if (input == "service")
+            _service = strdup(service_array);
+
+        if (input == "login") {
+            if (_auth[8] == 0) {
+                fwrite("Password:\n", 1, 10, stdout);
+            } else {
+                system("/bin/sh");
+            }
+        }
+    }
+}
 ```
 
 ## Ghidra

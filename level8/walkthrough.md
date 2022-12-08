@@ -181,12 +181,12 @@ if (_auth[8] == 0) {
 
 Nous avons 4 commandes a notre disposition
 
-- `"auth "`: copie une valeur dans \_auth apres l'avoir malloc()
+- `"auth "`: copie une valeur dans \_auth après l'avoir malloc()
 - `"service"`: change la valeur de \_service par le retour de strdup()
 - `"login"`: lance le fameux `if else` a valider
-- `"reset"`: free `"auth "` sans mettre ca valeur a zero
+- `"reset"`: free `"auth "` sans mettre sa valeur à zero
 
-`login` a besoin que `"auth "` ai été lancer au moins une fois sinon, il y a un `SegFault`
+`login` a besoin que `"auth "` ai été lancé au moins une fois sinon, il y a un `SegFault`
 
 Le programme nous affiche deux valeur, la premiere est `_auth` et la seconde est `_service`
 
@@ -209,8 +209,6 @@ On cherche alors a avoir:
 
 pour que `_auth + 0x20` soit different de 0
 
-On peut essayer notre theorie
-
 ```shell
 level8:$ ./level8
 (nil), (nil)
@@ -226,9 +224,4 @@ c542e581c5ba5162a85f767996e3247ed619ef6c6f7b76a59435545dc6259f8a
 $ Ctrl+D
 0x804a008, 0x804a028
 Ctrl+D
-
-level8:$ su level9
-Password:
-
-level9:$
 ```
